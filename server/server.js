@@ -3,6 +3,7 @@
 //mongoose.Promise = global.Promise;
 //mongoose.connect('mongodb://localhost:27017/TodoAppProd');
 // Local imports and Library imports separately.
+require('./config/config.js');
 
 const _ = require('lodash');
 var express = require('express');
@@ -156,7 +157,7 @@ app.patch('/todos/:id', (req, res) => {
       return res.status(400).send();
     }
     res.send({todo});
-    
+
   }).catch((e) => {
     res.status(400).send();
   })
