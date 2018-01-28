@@ -93,3 +93,7 @@ app.listen(3000, () => {
 })
 
 //CRUD (CREATE READ UPDATE DELETE)
+
+module.exports = {app};
+
+//The above code is similar to { app: app}
