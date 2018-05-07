@@ -193,7 +193,7 @@ describe('PATCH /todos/:id', () => {
   });
 
   it('should not update todo created by other users', (done) => {
-    var hexId = todos[1]._id.toHexString();
+    var hexId = todos[0]._id.toHexString();
     var text = 'This is the new text';
 
     request(app)
@@ -203,7 +203,7 @@ describe('PATCH /todos/:id', () => {
         completed: true,
         text
       })
-      .expect(404)
+      .expect(400)
       .end(done);
   });
 
@@ -213,7 +213,7 @@ describe('PATCH /todos/:id', () => {
 
     request(app)
       .patch(`/todos/${hexId}`)
-      set('x-auth', users[1].tokens[0].token)
+      .set('x-auth', users[1].tokens[0].token)
       .send({
         completed: false,
         text
@@ -345,25 +345,6 @@ describe('POST /users/login', () => {
         User.findById(users[1]._id).then((user) => {
           expect(user.tokens.length).toBe(1);
           done();
-        }).catch((e) => done(e));
-      });
-  });
-});
-
-describe('DELETE /users/me/token', () => {
-  it('should remove token from user on logout', (done) => {
-    request(app)
-      .delete('/users/me/token')
-      .set('x-auth', users[0].tokens[0].token)
-      .expect(200)
-      .end((err, res) => {
-        if (err) {
-          return done(err);
-        }
-
-        User.findById(users[0]._id).then((user) => {
-            expect(users.tokens.length).toBe(0);
-            done();
         }).catch((e) => done(e));
       });
   });
