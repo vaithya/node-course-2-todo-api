@@ -1,0 +1,59 @@
+ATH032926:node-todo-api nvaithyanathan$ npm run istanbul
+
+> todo-api@1.0.0 istanbul /Users/nvaithyanathan/Desktop/Node/node-todo-api
+> istanbul cover _mocha server/**/*.test.js
+
+
+
+Started on port 3000.
+  POST /todos
+    ✓ should create a new todo
+    ✓ should not create todo with invalid body data
+
+  GET /todos
+    ✓ should get all todos
+
+  GET /todos/:id
+    ✓ should return todo doc
+    ✓ should return 404 if todo not found
+    ✓ should return 404 for non-object ids
+    ✓ should not return todo doc created by other users
+
+  DELETE /todos/:id
+    ✓ should remove a todo
+    ✓ should not remove a todo created by other users
+    ✓ should return 404 if todo not found
+    ✓ should return 404 for non-object ids
+
+  PATCH /todos/:id
+    ✓ should update todo
+    ✓ should not update todo created by other users
+    ✓ should clear completedAt when todo is not completed
+
+  GET /users/me
+    ✓ should return user if authenticated
+    ✓ should return a 401 if not authenticated
+
+  POST /users
+    ✓ should create a user (234ms)
+    ✓ should return validation errors if request is invalid
+    ✓ should not create user if email is in use already
+
+  POST /users/login
+    ✓ should login user and return auth token (225ms)
+    ✓ should reject invalid login (215ms)
+
+
+  21 passing (10s)
+
+=============================================================================
+Writing coverage object [/Users/nvaithyanathan/Desktop/Node/node-todo-api/coverage/coverage.json]
+Writing coverage reports at [/Users/nvaithyanathan/Desktop/Node/node-todo-api/coverage]
+=============================================================================
+
+=============================== Coverage summary ===============================
+Statements   : 91.61% ( 131/143 )
+Branches     : 78.13% ( 25/32 )
+Functions    : 83.33% ( 5/6 )
+Lines        : 91.61% ( 131/143 )
+================================================================================
