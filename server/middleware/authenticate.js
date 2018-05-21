@@ -1,7 +1,8 @@
 var {User} = require('./../models/user');
+import HttpStatus from 'http-status-codes';
 
-var authenticate = (req, res, next) => {
-  var token = req.header('x-auth');
+export const authenticate = (req, res, next) => {
+  const token = req.header('x-auth');
 
   User.findByToken(token).then((user) => {
     if (!user) {
@@ -11,9 +12,9 @@ var authenticate = (req, res, next) => {
     req.token = token;
     next();
   }).catch((e) => {
-    res.status(401).send();
+    res
+      .status(HttpStatus.UNAUTHORIZED)
+      .send();
   })
-
 };
 
-module.exports = { authenticate };

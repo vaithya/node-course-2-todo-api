@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 
-var UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
@@ -35,8 +35,8 @@ var UserSchema = new mongoose.Schema({
 
 
 UserSchema.methods.toJSON = function () {
-  var user = this;
-  var userObject = user.toObject();
+  let user = this;
+  const userObject = user.toObject();
 
   return _.pick(userObject, ['_id', 'email']);
 };
@@ -44,14 +44,11 @@ UserSchema.methods.toJSON = function () {
 // Instance function.
 // Not using arrow function here because they do not bind "this" keyword.
 UserSchema.methods.generateAuthToken = function () {
-  var user = this;
-  var access = 'auth';
-  var token = jwt.sign({ _id: user._id.toHexString(), access}, 'abc123').toString();
-//  console.log(token);
-//  console.log(user);
-  //push is not working in the installed version of mongo.
+  let user = this;
+  const access = 'auth';
+  const token = jwt.sign({ _id: user._id.toHexString(), access}, 'abc123').toString();
   user.tokens = user.tokens.concat([{access, token}]);
-//  console.log(user);
+
   return user.save().then(() => {
     return token;
   });
@@ -59,16 +56,13 @@ UserSchema.methods.generateAuthToken = function () {
 
 // Model method
 UserSchema.statics.findByToken = function (token) {
-  var User = this;
-  var decoded;
+  const User = this;
+  let decoded;
 
   try {
     // jwt.verify will throw an error if anything goes wrong.
     decoded = jwt.verify(token, 'abc123');
   } catch (e) {
-    // return new Promise((resolve, reject) => {
-    //   reject();
-    // })
     return Promise.reject();
   }
   // Quotes are required if you have a .value
@@ -80,7 +74,7 @@ UserSchema.statics.findByToken = function (token) {
 };
 
 UserSchema.statics.findByCredentials = function (email, password) {
-  var User = this;
+  const User = this;
 
 
   return User.findOne({email}).then((user) => {
@@ -101,7 +95,7 @@ UserSchema.statics.findByCredentials = function (email, password) {
 };
 
 UserSchema.methods.removeToken = function (token) {
-  var user = this;
+  let user = this;
 
   user.update({
     $pull: {
@@ -113,7 +107,7 @@ UserSchema.methods.removeToken = function (token) {
 };
 
 UserSchema.pre('save', function (next) {
-  var user = this;
+  const user = this;
 
   if(user.isModified('password')) {
     bcrypt.genSalt(10, (err, salt) => {
@@ -128,34 +122,5 @@ UserSchema.pre('save', function (next) {
 
 })
 var User = mongoose.model('User', UserSchema);
-
-// var User = mongoose.model('User', {
-  // email: {
-  //   type: String,
-  //   required: true,
-  //   trim: true,
-  //   minlength: 1,
-  //   unique: true,
-  //   validate: {
-  //     validator: validator.isEmail,
-  //     message: '{VALUE} is not a valid email'
-  //   }
-  // },
-  // password: {
-  //   type: String,
-  //   required: true,
-  //   minlength: 6
-  // },
-  // tokens: [{
-  //   access: {
-  //     type: String,
-  //     required: true
-  //   },
-  //   token: {
-  //     type: String,
-  //     required: true
-  //   }
-  // }]
-//});
 
 module.exports = {User};
